@@ -32,36 +32,18 @@ sudo apt-get install liblzma-dev  # Если эти библиотеки не б
 ``` 
 
 #### Установка CUDA и cuDNN (для GPU)
+```bash
+pip install onnxruntime-gpu[cuda,cudnn]
+```
 
-```bash
-sudo apt update && apt upgrade -y
-sudo apt install gcc
-wget https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda_12.4.0_550.54.14_linux.run &&
-chmod +x cuda_12.4.0_550.54.14_linux.run
-./cuda_12.4.0_550.54.14_linux.run \
-  --silent \
-  --toolkit \
-  --installpath=/usr/local/cuda-12.4.0 \
-  --no-opengl-libs \
-  --no-drm \
-  --no-man-page\
-  --override
-wget https://huggingface.co/csukuangfj/cudnn/resolve/main/cudnn-linux-x86_64-8.9.7.29_cuda12-archive.tar.xz
-tar xvf cudnn-linux-x86_64-8.9.7.29_cuda12-archive.tar.xz --strip-components=1 -C /usr/local/cuda-12.4.0
-```
-- Активация вновь установленного CUDA происходит с помощью [activate-cuda-12.4.sh](activate-cuda-12.4.sh) и действует до перезагрузки. 
-```bash
-source activate-cuda-12.4.sh
-```
-### Загрузка модели Vosk 0.52. До перехода sherpa-onnx на более новую версию onnxruntime использовать в этом проекте Vosk 0.54 невозможно.
-```bash
-git clone --filter=blob:none --no-checkout https://huggingface.co/alphacep/vosk-model-ru && \
-cd vosk-model-ru && \
-git checkout 0b81d4985ca88ccf8463cb222f9e284bb0ea06bb
-```
-### Загрузка модели GigaAM
+### Загрузка моделей
+С переходом на nnx-asr пре-загрузка моделей перестала быть необходимой. Тем не менее, использование загруженных моделей 
+всё ещё возможно.  
+
+#### загрузка Vosk 0.54
+### Загрузка модели GigaAM.
 ```bash 
-cd models && git clone https://huggingface.co/Alexanrd/GigaAMv2_CTC_RU_ASR_for_sherpa_onnx && cd ..
+cd models && git clone https://huggingface.co/istupakov/gigaam-v2-onnx && cd ..
 ```
 
 ### Загрузка модели для пунктуации. Обязательное условие.
@@ -80,6 +62,7 @@ PORT=49153
 
 # ASR settings
 MODEL_NAME=Gigaam      # доступные значения: Vosk5 и Gigaam. 
+USE_LOCAL_MODEL=0      # использовать самостоятельно скачанную модель.
 BASE_SAMPLE_RATE=16000 # Частота дискретизации модели. К этой частоте будут приведены получаемые аудио. 
 PROVIDER=CUDA          # доступные значения: CUDA и CPU 
 NUM_THREADS=4          # Желательно не менее 2
