@@ -1,5 +1,8 @@
 import os
 import datetime
+from dotenv import load_dotenv
+
+load_dotenv('config.env')
 
 # server settings
 HOST = os.getenv('HOST', '0.0.0.0')
@@ -12,7 +15,8 @@ PROVIDER = os.getenv('PROVIDER',"CUDA")
 NUM_THREADS = int(os.getenv('NUM_THREADS', 0))
 
 # Logger settings
-LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
+DEBUG_LOGS_ENABLED = True if int(os.getenv('DEBUG_LOGS_ENABLED', 0)) == 1 else False
+LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO' if not DEBUG_LOGS_ENABLED else 'DEBUG')
 LOGGING_FORMAT = os.getenv('LOGGING_FORMAT', u'#%(levelname)-8s %(filename)s [LINE:%(lineno)d] [%(asctime)s]  %(message)s')
 FILENAME = os.getenv('FILENAME', f'logs/ASR-{datetime.datetime.now().date()}.log')
 FILEMODE = os.getenv('FILEMODE', 'a')
@@ -47,3 +51,4 @@ CPU_WORKERS = int(os.getenv('CPU_WORKERS', 0)) # Для значений мен�
 
 
 print(f"Using '{LOGGING_LEVEL}' LOGGING_LEVEL")
+print(f"DEBUG логи {'включены' if DEBUG_LOGS_ENABLED else 'отключены'}")
